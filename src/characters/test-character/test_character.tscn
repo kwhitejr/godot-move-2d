@@ -37,19 +37,21 @@ script/source = "extends CharacterBody2D
 signal char_idle_stand
 signal char_face_direction
 
-func _process(delta) -> void:
-	jump_component.detect_move(self)
-	dash_component.detect_move(self)
+func _process(delta: float) -> void:
+	walk_component.detect_move(delta, self)
+	crouch_component.detect_move(delta, self)
+	jump_component.detect_move(delta, self)
+	dash_component.detect_move(delta, self)
 
 func _physics_process(delta: float) -> void:
 	previous_velocity = velocity
 	velocity.y += get_gravity() * delta
 	
 	# Handle moves
-	walk_component.handle_move(self)
-	jump_component.handle_move(self, previous_velocity)
-	crouch_component.handle_move(self)
-	dash_component.handle_move(self, delta)
+	walk_component.handle_move(delta, self, previous_velocity)
+	jump_component.handle_move(delta, self, previous_velocity)
+	crouch_component.handle_move(delta, self, previous_velocity)
+	dash_component.handle_move(delta, self, previous_velocity)
 
 	var direction = Input.get_axis(\"walk_left\", \"walk_right\")
 	if not direction == previous_direction and not direction == 0.0:
@@ -605,8 +607,6 @@ script = ExtResource("15_d2478")
 [connection signal="char_face_direction" from="." to="AnimatedSprite2D" method="_on_test_char_char_face_direction"]
 [connection signal="char_idle_stand" from="." to="AnimatedSprite2D" method="_on_char_idle_stand"]
 [connection signal="char_walk" from="WalkComponent" to="AnimatedSprite2D" method="_on_walk_component_char_walk"]
-[connection signal="char_walk_left" from="WalkComponent" to="AnimatedSprite2D" method="_on_walk_component_char_walk_left"]
-[connection signal="char_walk_right" from="WalkComponent" to="AnimatedSprite2D" method="_on_walk_component_char_walk_right"]
 [connection signal="char_idle_crouch" from="CrouchComponent" to="AnimatedSprite2D" method="_on_crouch_component_char_idle_crouch"]
 [connection signal="char_dash_end" from="DashComponent" to="AnimatedSprite2D" method="_on_dash_component_char_dash_end"]
 [connection signal="char_dash_start" from="DashComponent" to="AnimatedSprite2D" method="_on_dash_component_char_dash_start"]

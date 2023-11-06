@@ -1,10 +1,12 @@
 class_name CrouchComponent
-extends Node
+extends AbstractMoveComponent
 
-# Crouch signal(s)
 signal char_idle_crouch
 
-func handle_move(body: CharacterBody2D) -> void:
+func detect_move(delta: float, body: CharacterBody2D):
+	pass
+
+func handle_move(delta: float, body: CharacterBody2D, previous_velocity: Vector2) -> void:
 	# Handle crouch
 	if Input.is_action_pressed("crouch") and body.is_on_floor():
 		char_idle_crouch.emit()
