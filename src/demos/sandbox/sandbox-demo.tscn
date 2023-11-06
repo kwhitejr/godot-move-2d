@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://b87cwgrrg41n8"]
+
+[ext_resource type="PackedScene" uid="uid://tmiuovjrimcc" path="res://src/levels/test_level.tscn" id="1_w00uc"]
+[ext_resource type="PackedScene" uid="uid://d0l3aqfc1pokq" path="res://src/characters/test-character/test_character.tscn" id="2_iepro"]
+
+[node name="sandbox-demo" type="Node2D"]
+
+[node name="test_scene" parent="." instance=ExtResource("1_w00uc")]
+
+[node name="TestChar" parent="." instance=ExtResource("2_iepro")]
