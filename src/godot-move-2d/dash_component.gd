@@ -1,7 +1,7 @@
 class_name DashComponent
 extends AbstractMoveComponent
 
-# Separate duration config from timer
+
 @export var dash_duration : float = 0.25
 @export var dash_speed_multiplier : float = 2
 @export var dash_cooldown : float = 1.0
@@ -25,22 +25,19 @@ func handle_move(delta: float, body: CharacterBody2D, previous_velocity: Vector2
 	if is_dashing:
 		dash_timer -= delta
 		body.velocity = _get_dash_velocity(body, original_velocity)
-		
 		if dash_timer <= 0:
 			_end_dash(body)
+			
 	if cooldown_timer > 0:
 		cooldown_timer -= delta
 
 func _start_dash(body: CharacterBody2D) -> void:
-#	print("Start Dash")
 	original_velocity = body.velocity
 	is_dashing = true
 	cooldown_timer = dash_cooldown
-	
 	char_dash_start.emit()
 	
 func _end_dash(body: CharacterBody2D) -> void:
-#	print("End Dash")
 	is_dashing = false
 	dash_timer = dash_duration
 	body.velocity = Vector2()
