@@ -19,50 +19,55 @@
 script/source = "extends CharacterBody2D
 
 
+const utils = preload(\"res://src/libs/utils.gd\")
+
 # Defaults
 @export var default_descend_gravity : float = 500.0
 
-# Configure Moves
+@onready var move_components = utils.get_typed_children(self, AbstractMoveComponent)
+# TODO: get jump gravity without specific reference to JumpComponent
 @onready var jump_component : JumpComponent = get_node(\"JumpComponent\")
-@onready var walk_component : WalkComponent = get_node(\"WalkComponent\")
-@onready var crouch_component : CrouchComponent = get_node(\"CrouchComponent\")
-@onready var dash_component : DashComponent = get_node(\"DashComponent\")
 
 # Helpers
 @onready var previous_velocity : Vector2 = Vector2.ZERO
-@onready var previous_direction : float = 0.0
-@onready var is_gravity_locked : bool = false
+@onready var previous_direction : float
+@onready var is_gravity_disabled : bool = false
 
 # Idle signal(s)
 signal char_idle_stand
 signal char_face_direction
 
-func _process(delta) -> void:
-	jump_component.detect_move(self)
-	dash_component.detect_move(self)
+func _process(delta: float) -> void:
+	for move_component in move_components:
+		move_component.detect_move(delta, self)
 
 func _physics_process(delta: float) -> void:
 	previous_velocity = velocity
-	velocity.y += get_gravity() * delta
+	velocity.y += _get_gravity(self) * delta
 	
+	# TODO: possible to trigger moves without looping?
 	# Handle moves
-	walk_component.handle_move(self)
-	jump_component.handle_move(self, previous_velocity)
-	crouch_component.handle_move(self)
-	dash_component.handle_move(self, delta)
+	for move_component in move_components:
+		move_component.handle_move(delta, self, previous_velocity)
 
-	var direction = Input.get_axis(\"walk_left\", \"walk_right\")
-	if not direction == previous_direction and not direction == 0.0:
-		char_face_direction.emit(direction)
+	_handle_direction()
 	
 	if not Input.is_anything_pressed():
 		char_idle_stand.emit(self)
 
 	move_and_slide()
 
-func get_gravity() -> float:
+func _handle_direction() -> void:
+	var direction = Input.get_axis(\"walk_left\", \"walk_right\")
+	if (previous_direction != direction) and (direction != 0):
+		char_face_direction.emit(direction)
+		direction = previous_direction
+
+func _get_gravity(body: CharacterBody2D) -> float:
+	if is_gravity_disabled:
+		return 0.0
 	if jump_component:
-		return jump_component.jump_ascend_gravity if velocity.y < 0.0 else jump_component.jump_descend_gravity
+		return jump_component.get_jump_gravity(body)
 	else:
 		return default_descend_gravity
 
@@ -605,8 +610,6 @@ script = ExtResource("15_d2478")
 [connection signal="char_face_direction" from="." to="AnimatedSprite2D" method="_on_test_char_char_face_direction"]
 [connection signal="char_idle_stand" from="." to="AnimatedSprite2D" method="_on_char_idle_stand"]
 [connection signal="char_walk" from="WalkComponent" to="AnimatedSprite2D" method="_on_walk_component_char_walk"]
-[connection signal="char_walk_left" from="WalkComponent" to="AnimatedSprite2D" method="_on_walk_component_char_walk_left"]
-[connection signal="char_walk_right" from="WalkComponent" to="AnimatedSprite2D" method="_on_walk_component_char_walk_right"]
 [connection signal="char_idle_crouch" from="CrouchComponent" to="AnimatedSprite2D" method="_on_crouch_component_char_idle_crouch"]
 [connection signal="char_dash_end" from="DashComponent" to="AnimatedSprite2D" method="_on_dash_component_char_dash_end"]
 [connection signal="char_dash_start" from="DashComponent" to="AnimatedSprite2D" method="_on_dash_component_char_dash_start"]

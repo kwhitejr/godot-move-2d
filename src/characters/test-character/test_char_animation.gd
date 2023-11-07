@@ -53,7 +53,7 @@ func _on_walk_component_char_walk(body: CharacterBody2D):
 		self.play("walk")
 
 func _on_test_char_char_face_direction(direction: float):
-	var should_flip_horizontal = direction == -1
+	var should_flip_horizontal = direction < 0
 	self.flip_h = should_flip_horizontal
 
 func _on_jump_component_char_visualize_feature_enable(color: Color) -> void:

@@ -1,5 +1,5 @@
 class_name JumpComponent
-extends Node
+extends AbstractMoveComponent
 
 
 @export var jump_height : float = 30
@@ -33,10 +33,8 @@ signal char_jump_apex
 signal char_jump_descend
 signal char_jump_landed
 signal char_jump_air
-signal char_visualize_feature_enable
-signal char_visualize_feature_disable
 
-func _ready():
+func ready_move():
 	add_child(coyote_timer)
 	coyote_timer.one_shot = true
 	coyote_timer.timeout.connect(_on_coyote_timer_timeout)
@@ -44,11 +42,11 @@ func _ready():
 	jump_buffer_timer.one_shot = true
 	jump_buffer_timer.timeout.connect(_on_jump_buffer_timer_timeout)
 
-func detect_move(body: CharacterBody2D):
+func detect_move(delta: float, body: CharacterBody2D):
 	if not body.is_on_floor() and not is_jumping:
 		_start_coyote_timer()
 
-func handle_move(body: CharacterBody2D, previous_velocity: Vector2):
+func handle_move(delta: float, body: CharacterBody2D, previous_velocity: Vector2):
 	if is_jump_buffer_enabled:
 		_handle_jump_buffer(body)
 	
@@ -65,16 +63,19 @@ func handle_move(body: CharacterBody2D, previous_velocity: Vector2):
 		if is_jump_buffer_enabled:
 			_start_jump_buffer_timer()
 		if _should_jump(body):
-			jump(body)
+			_jump(body)
 		if _should_jump_air(body, is_jumping, air_jumps_current):
-			jump_air(body)
+			_jump_air(body)
+
+func get_jump_gravity(body : CharacterBody2D) -> float:
+	return jump_ascend_gravity if body.velocity.y < 0.0 else jump_descend_gravity
 
 func _should_jump(body: CharacterBody2D) -> bool:
 	if is_coyote_time_enabled and not body.is_on_floor():
 		return coyote_timer.get_time_left() > 0
 	return body.is_on_floor()
 
-func jump(body: CharacterBody2D) -> void:
+func _jump(body: CharacterBody2D) -> void:
 	air_jumps_current = air_jumps_total
 	body.velocity.y = jump_velocity
 	is_jumping = true
@@ -83,7 +84,7 @@ func jump(body: CharacterBody2D) -> void:
 func _should_jump_air(body: CharacterBody2D, is_jumping: bool, remaining_air_jumps: int) -> bool:
 	return remaining_air_jumps > 0 and is_jumping and not body.is_on_floor()
 	
-func jump_air(body: CharacterBody2D) -> void:
+func _jump_air(body: CharacterBody2D) -> void:
 	air_jumps_current -= 1
 	body.velocity.y = jump_velocity
 	is_jumping = true
@@ -122,7 +123,7 @@ func _handle_jump_buffer(body: CharacterBody2D) -> void:
 	if jump_buffer_timer.get_time_left() > 0 and _should_jump(body):
 		jump_buffer_timer.stop()
 		char_visualize_feature_disable.emit()
-		jump(body)
+		_jump(body)
 		
 func _on_coyote_timer_timeout() -> void:
 	_handle_timer_end()
