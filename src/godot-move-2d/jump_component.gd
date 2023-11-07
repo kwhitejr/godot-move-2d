@@ -34,7 +34,7 @@ signal char_jump_descend
 signal char_jump_landed
 signal char_jump_air
 
-func _ready():
+func ready_move():
 	add_child(coyote_timer)
 	coyote_timer.one_shot = true
 	coyote_timer.timeout.connect(_on_coyote_timer_timeout)
@@ -66,6 +66,9 @@ func handle_move(delta: float, body: CharacterBody2D, previous_velocity: Vector2
 			_jump(body)
 		if _should_jump_air(body, is_jumping, air_jumps_current):
 			_jump_air(body)
+
+func get_jump_gravity(body : CharacterBody2D) -> float:
+	return jump_ascend_gravity if body.velocity.y < 0.0 else jump_descend_gravity
 
 func _should_jump(body: CharacterBody2D) -> bool:
 	if is_coyote_time_enabled and not body.is_on_floor():
