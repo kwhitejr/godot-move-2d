@@ -45,6 +45,7 @@ func _physics_process(delta: float) -> void:
 	previous_velocity = velocity
 	velocity.y += _get_gravity(self) * delta
 	
+	# TODO: possible to trigger moves without looping?
 	# Handle moves
 	for move_component in move_components:
 		move_component.handle_move(delta, self, previous_velocity)
