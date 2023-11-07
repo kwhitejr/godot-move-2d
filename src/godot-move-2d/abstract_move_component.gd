@@ -1,7 +1,7 @@
 class_name AbstractMoveComponent
 extends Node
 
-signal char_visualize_feature_enable
+signal char_visualize_feature_enable(color: Color)
 signal char_visualize_feature_disable
 
 func _ready() -> void:

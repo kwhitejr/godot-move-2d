@@ -7,6 +7,9 @@ extends AbstractMoveComponent
 @export var dash_cooldown : float = 1.0
 @export var is_air_dash_enabled : bool = true
 
+@export var is_visualize_dash_enabled : bool = true
+@export var dash_feature_color : Color = Color(Constants.FeatureVisualizationColors.GREEN)
+
 var is_dashing : bool = false
 var original_velocity : Vector2 = Vector2()
 var dash_timer : float = dash_duration
@@ -36,11 +39,13 @@ func _start_dash(body: CharacterBody2D) -> void:
 	is_dashing = true
 	cooldown_timer = dash_cooldown
 	char_dash_start.emit()
+	char_visualize_feature_enable.emit(dash_feature_color)
 	
 func _end_dash(body: CharacterBody2D) -> void:
 	is_dashing = false
 	dash_timer = dash_duration
 	body.velocity = Vector2()
+	char_visualize_feature_disable.emit()
 
 func _get_dash_velocity(body: CharacterBody2D, original_velocity: Vector2) -> Vector2:
 	return original_velocity * dash_speed_multiplier

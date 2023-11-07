@@ -56,11 +56,11 @@ func _on_test_char_char_face_direction(direction: float):
 	var should_flip_horizontal = direction < 0
 	self.flip_h = should_flip_horizontal
 
-func _on_jump_component_char_visualize_feature_enable(color: Color) -> void:
+func _on_char_visualize_feature_enable(color: Color) -> void:
 	var is_enabled := 1
 	self.material.set_shader_parameter("enabled", is_enabled)
 	self.material.set_shader_parameter("color", color)
 
-func _on_jump_component_char_visualize_feature_disable():
+func _on_char_visualize_feature_disable():
 	var is_enabled := 0
 	self.material.set_shader_parameter("enabled", is_enabled)
