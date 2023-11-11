@@ -1,14 +1,15 @@
 class_name AbstractMoveComponent
 extends Node
 
-signal char_visualize_feature_enable
+signal char_visualize_feature_enable(color: Color)
 signal char_visualize_feature_disable
 
 func _ready() -> void:
 	add_to_group("move_components")
-	ready_move()
+	var body : CharacterBody2D = get_parent()
+	ready_move(body)
 
-func ready_move() -> void:
+func ready_move(body: CharacterBody2D) -> void:
 	pass
 
 # Called in CharacterBody2D._process()

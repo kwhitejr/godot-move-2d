@@ -10,14 +10,13 @@ extends AbstractMoveComponent
 
 @export var is_coyote_time_enabled : bool = true
 @export var coyote_time_duration_secs : float = 0.1
-@export var is_visualize_coyote_time_enabled : bool = true
+@export var is_visualize_coyote_time_enabled : bool = false
 @export var coyote_time_feature_color : Color = Color(Constants.FeatureVisualizationColors.BLUE)
 
 @export var is_jump_buffer_enabled : bool = true
 @export var jump_buffer_duration_secs : float = 0.2
-@export var is_visualize_jump_buffer_enabled : bool = true
+@export var is_visualize_jump_buffer_enabled : bool = false
 @export var jump_buffer_feature_color : Color = Color(Constants.FeatureVisualizationColors.PINK)
-
 
 var jump_velocity : float = ((2.0 * jump_height) / jump_time_to_peak) * -1.0
 var jump_ascend_gravity : float = ((-2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)) * -1.0
@@ -34,7 +33,7 @@ signal char_jump_descend
 signal char_jump_landed
 signal char_jump_air
 
-func ready_move():
+func ready_move(body: CharacterBody2D):
 	add_child(coyote_timer)
 	coyote_timer.one_shot = true
 	coyote_timer.timeout.connect(_on_coyote_timer_timeout)
