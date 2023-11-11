@@ -19,7 +19,7 @@ enum DashDirectionType {
 @export var dash_duration : float = 0.25
 ## The velocity of the dash. If you want the dash to feel fast, must be greater than normal speed (e.g. walk_speed)
 @export var dash_speed : float = 300
-## The number of times a character can dash before requiring a cooldown. Note: Zero results in buggy behavior. 
+## The number of consecutive dashes before requiring a cooldown. Note: Zero results in buggy behavior. 
 @export var dash_amount : int = 2
 ## The duration in seconds for the dash cooldown. After the cooldown ends, character can dash again. 
 @export var dash_cooldown_duration : float = 1.0
