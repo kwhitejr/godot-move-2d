@@ -30,7 +30,7 @@ enum DashDirectionType {
 @export_group("Dash Feature Visualization")
 @export var is_visualize_dash_enabled : bool = false
 @export var dash_feature_color : Color = Color(Constants.FeatureVisualizationColors.GREEN)
-@export var is_visualize_dash_cooldown_enabled : bool = true
+@export var is_visualize_dash_cooldown_enabled : bool = false
 @export var dash_cooldown_color : Color = Color(Constants.FeatureVisualizationColors.PURPLE)
 
 var _is_dashing : bool = false
