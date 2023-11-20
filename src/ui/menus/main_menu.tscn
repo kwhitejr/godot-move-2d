@@ -1,0 +1,90 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcfr53dkvixiy"]
+
+[ext_resource type="Theme" uid="uid://b1o42xmiwphpu" path="res://src/ui/menus/menu_theme.tres" id="1_qmd1i"]
+[ext_resource type="Script" path="res://src/ui/menus/main_menu.gd" id="2_ve3pb"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_qmd1i")
+script = ExtResource("2_ve3pb")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 1153.0
+offset_bottom = 647.0
+color = Color(0, 0, 0.184314, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 2.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+text = "Godot Move 2D"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Subtitle" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Platformer Movement Lab"
+horizontal_alignment = 1
+
+[node name="VBoxButtons" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="ButtonSelectDemo" type="Button" parent="MarginContainer/VBoxContainer/VBoxButtons"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../ButtonQuitGame")
+focus_neighbor_bottom = NodePath("../ButtonStartGame")
+focus_next = NodePath("../ButtonStartGame")
+focus_previous = NodePath("../ButtonQuitGame")
+text = "Select Demo"
+
+[node name="ButtonStartGame" type="Button" parent="MarginContainer/VBoxContainer/VBoxButtons"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+focus_neighbor_top = NodePath("../ButtonSelectDemo")
+focus_neighbor_bottom = NodePath("../ButtonQuitGame")
+focus_next = NodePath("../ButtonQuitGame")
+focus_previous = NodePath("../ButtonSelectDemo")
+text = "Start Game"
+
+[node name="ButtonQuitGame" type="Button" parent="MarginContainer/VBoxContainer/VBoxButtons"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+focus_neighbor_top = NodePath("../ButtonStartGame")
+focus_neighbor_bottom = NodePath("../ButtonSelectDemo")
+focus_next = NodePath("../ButtonSelectDemo")
+focus_previous = NodePath("../ButtonStartGame")
+text = "Exit"
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxButtons/ButtonSelectDemo" to="." method="_on_button_select_demo_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxButtons/ButtonStartGame" to="." method="_on_start_game_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxButtons/ButtonQuitGame" to="." method="_on_quit_button_pressed"]

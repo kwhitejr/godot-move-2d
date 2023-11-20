@@ -189,7 +189,7 @@ texture = ExtResource("2_ta3p5")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_e5x3v")
 
-[node name="test_scene" type="Node2D"]
+[node name="TestLevel" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2(-256, 184)

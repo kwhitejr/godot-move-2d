@@ -1,0 +1,78 @@
+[gd_scene load_steps=3 format=3 uid="uid://jmrpwyme2ql8"]
+
+[ext_resource type="Script" path="res://src/ui/menus/demo_select.gd" id="1_gp5sx"]
+[ext_resource type="Theme" uid="uid://b1o42xmiwphpu" path="res://src/ui/menus/menu_theme.tres" id="2_xe7pf"]
+
+[node name="DemoSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+theme = ExtResource("2_xe7pf")
+script = ExtResource("1_gp5sx")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 1154.0
+offset_bottom = 647.0
+color = Color(4.81308e-08, 1.8049e-08, 0.184122, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1154.0
+offset_bottom = 647.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+text = "Select a Demo"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxButtons" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme = ExtResource("2_xe7pf")
+
+[node name="ButtonSandboxDemo" type="Button" parent="MarginContainer/VBoxContainer/VBoxButtons"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../ButtonBackToMainMenu")
+focus_neighbor_bottom = NodePath("../ButtonCelesteCloneDemo")
+focus_next = NodePath("../ButtonCelesteCloneDemo")
+focus_previous = NodePath("../ButtonBackToMainMenu")
+text = "Sandbox"
+alignment = 0
+
+[node name="ButtonCelesteCloneDemo" type="Button" parent="MarginContainer/VBoxContainer/VBoxButtons"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../ButtonSandboxDemo")
+focus_neighbor_bottom = NodePath("../ButtonBackToMainMenu")
+focus_next = NodePath("../ButtonBackToMainMenu")
+focus_previous = NodePath("../ButtonSandboxDemo")
+text = "Celeste Clone"
+alignment = 0
+
+[node name="ButtonBackToMainMenu" type="Button" parent="MarginContainer/VBoxContainer/VBoxButtons"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../ButtonCelesteCloneDemo")
+focus_neighbor_bottom = NodePath("../ButtonSandboxDemo")
+focus_next = NodePath("../ButtonSandboxDemo")
+focus_previous = NodePath("../ButtonCelesteCloneDemo")
+text = "Back"
+alignment = 0
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxButtons/ButtonBackToMainMenu" to="." method="_on_back_button_pressed"]

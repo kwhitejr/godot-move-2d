@@ -1,3 +1,4 @@
+class_name TestCharacter
 extends CharacterBody2D
 
 
@@ -15,9 +16,9 @@ const utils = preload("res://src/libs/utils.gd")
 @onready var previous_direction : float
 @onready var is_gravity_disabled : bool = false
 
-# Idle signal(s)
 signal char_idle_stand
 signal char_face_direction
+signal char_collect_pickup(pickup : Pickup)
 
 func _process(delta: float) -> void:
 	for move_component in move_components:
@@ -54,3 +55,5 @@ func _get_gravity(body: CharacterBody2D) -> float:
 	else:
 		return default_descend_gravity
 
+func collect(pickup : Pickup):
+	char_collect_pickup.emit(pickup)

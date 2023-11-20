@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://cfh4admc1cvlg"]
+
+[ext_resource type="Script" path="res://src/game.gd" id="1_4f1ys"]
+[ext_resource type="PackedScene" uid="uid://b87cwgrrg41n8" path="res://src/demos/sandbox/sandbox-demo.tscn" id="3_0v0o8"]
+[ext_resource type="PackedScene" uid="uid://2h0qt176fv4o" path="res://src/ui/ui.tscn" id="3_ve2rm"]
+
+[node name="game" type="Node2D" node_paths=PackedStringArray("ui")]
+script = ExtResource("1_4f1ys")
+DemoScene = ExtResource("3_0v0o8")
+ui = NodePath("UI")
+
+[node name="UI" parent="." instance=ExtResource("3_ve2rm")]
+
+[node name="sandbox-demo" parent="." instance=ExtResource("3_0v0o8")]
+
+[connection signal="start_game" from="UI" to="." method="_on_ui_start_game"]
