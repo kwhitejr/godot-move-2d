@@ -3,7 +3,8 @@ extends Node2D
 
 
 @export var DemoScene : PackedScene
-@export var ui : UI
+@onready var ui = %UI
+
 
 func start_game() -> void:
 	# Instantiate selected demo

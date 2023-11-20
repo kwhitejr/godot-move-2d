@@ -24,7 +24,7 @@ func _on_button_select_demo_pressed():
 	change_menu.emit(UI.MENU.DEMO_SELECT)
 
 func focus_button() -> void:
-	if v_box_buttons:
+	if v_box_buttons and self.visible == true:
 		# refactor this to ensure button is always a Button
 		var button : Button = v_box_buttons.get_child(0)
 		button.grab_focus()

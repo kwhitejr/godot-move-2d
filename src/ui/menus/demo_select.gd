@@ -23,7 +23,7 @@ func _on_visibility_changed() -> void:
 		focus_button()
 		
 func focus_button() -> void:
-	if v_box_buttons:
+	if v_box_buttons and self.visible == true:
 		# refactor this to ensure button is always a Button
 		var button : Button = v_box_buttons.get_child(0)
 		button.grab_focus()
