@@ -12,6 +12,7 @@
 position = Vector2(-202, 177)
 
 [node name="Pickup" parent="." instance=ExtResource("3_ufipb")]
+visible = false
 position = Vector2(-114, 117)
 
 [connection signal="body_entered" from="Pickup" to="Pickup" method="_on_body_entered"]

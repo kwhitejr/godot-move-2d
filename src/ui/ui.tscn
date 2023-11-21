@@ -50,3 +50,5 @@ visible = false
 [connection signal="change_menu" from="Control/MainMenu" to="." method="_on_menu_change_menu"]
 [connection signal="start_game" from="Control/MainMenu" to="." method="_on_main_menu_start_game"]
 [connection signal="change_menu" from="Control/DemoSelect" to="." method="_on_menu_change_menu"]
+[connection signal="select_demo" from="Control/DemoSelect" to="." method="_on_demo_select_select_demo"]
+[connection signal="select_demo" from="Control/DemoSelect" to="Control/MainMenu" method="_on_demo_select_select_demo"]
