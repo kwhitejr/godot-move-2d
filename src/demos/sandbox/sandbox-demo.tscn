@@ -1,10 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://b87cwgrrg41n8"]
+[gd_scene load_steps=4 format=3 uid="uid://b87cwgrrg41n8"]
 
 [ext_resource type="PackedScene" uid="uid://tmiuovjrimcc" path="res://src/levels/test_level.tscn" id="1_w00uc"]
 [ext_resource type="PackedScene" uid="uid://d0l3aqfc1pokq" path="res://src/characters/test-character/test_character.tscn" id="2_iepro"]
+[ext_resource type="PackedScene" uid="uid://bnt5kjtwds4ma" path="res://src/misc/pickup/pickup.tscn" id="3_ufipb"]
 
 [node name="sandbox-demo" type="Node2D"]
 
-[node name="test_scene" parent="." instance=ExtResource("1_w00uc")]
+[node name="TestLevel" parent="." instance=ExtResource("1_w00uc")]
 
 [node name="TestChar" parent="." instance=ExtResource("2_iepro")]
+position = Vector2(-202, 177)
+
+[node name="Pickup" parent="." instance=ExtResource("3_ufipb")]
+visible = false
+position = Vector2(-114, 117)
+
+[connection signal="body_entered" from="Pickup" to="Pickup" method="_on_body_entered"]

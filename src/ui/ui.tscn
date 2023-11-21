@@ -1,0 +1,54 @@
+[gd_scene load_steps=4 format=3 uid="uid://2h0qt176fv4o"]
+
+[ext_resource type="Script" path="res://src/ui/ui.gd" id="1_vwtjg"]
+[ext_resource type="PackedScene" uid="uid://dcfr53dkvixiy" path="res://src/ui/menus/main_menu.tscn" id="2_egecy"]
+[ext_resource type="PackedScene" uid="uid://jmrpwyme2ql8" path="res://src/ui/menus/demo_select.tscn" id="3_fbf3e"]
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource("1_vwtjg")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Score" type="Label" parent="Control/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
+[node name="MainMenu" parent="Control" instance=ExtResource("2_egecy")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="DemoSelect" parent="Control" instance=ExtResource("3_fbf3e")]
+unique_name_in_owner = true
+visible = false
+
+[connection signal="change_menu" from="Control/MainMenu" to="." method="_on_menu_change_menu"]
+[connection signal="start_game" from="Control/MainMenu" to="." method="_on_main_menu_start_game"]
+[connection signal="change_menu" from="Control/DemoSelect" to="." method="_on_menu_change_menu"]
+[connection signal="select_demo" from="Control/DemoSelect" to="." method="_on_demo_select_select_demo"]
+[connection signal="select_demo" from="Control/DemoSelect" to="Control/MainMenu" method="_on_demo_select_select_demo"]

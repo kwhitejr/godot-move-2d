@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2lo1hwdflkh0"]
+
+[ext_resource type="PackedScene" uid="uid://tmiuovjrimcc" path="res://src/levels/test_level.tscn" id="1_wf5ti"]
+[ext_resource type="PackedScene" uid="uid://d0l3aqfc1pokq" path="res://src/characters/test-character/test_character.tscn" id="2_vujsw"]
+[ext_resource type="PackedScene" uid="uid://bnt5kjtwds4ma" path="res://src/misc/pickup/pickup.tscn" id="3_od756"]
+
+[node name="celeste-clone" type="Node2D"]
+
+[node name="TestLevel" parent="." instance=ExtResource("1_wf5ti")]
+
+[node name="TestChar" parent="." instance=ExtResource("2_vujsw")]
+position = Vector2(-298, 81)
+
+[node name="Pickup" parent="." instance=ExtResource("3_od756")]
+position = Vector2(-62, 109)
