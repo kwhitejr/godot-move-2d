@@ -46,28 +46,30 @@ signal char_dash_start
 ## Fired when the Dash movement ends.
 signal char_dash_end
 
-func ready_move(body: CharacterBody2D):
+# TODO: refactor to get body ref another way
+func handle_ready(body: CharacterBody2D):
 	add_child(dash_timer)
 	dash_timer.one_shot = true
 	dash_timer.timeout.connect(Callable(_on_dash_timer_timeout).bind(body))
 	add_child(dash_cooldown_timer)
 	dash_cooldown_timer.one_shot = true
 	dash_cooldown_timer.timeout.connect(_on_dash_cooldown_timer_timout)
-	
-func detect_move(delta: float, body: CharacterBody2D) -> void:
-	if Input.is_action_just_pressed("dash"):
+
+func handle_input_event(event : InputEvent, body : CharacterBody2D) -> void:
+#func detect_move(delta: float, body: CharacterBody2D) -> void:
+	if event.is_action_pressed("dash"):
 		var direction_input : Vector2 = Input.get_vector("left", "right", "up", "down")
 		
-		if _can_dash(body):
+		if can_do_move(body):
 			var _dash_direction := _get_dash_direction(direction_input, dash_direction_type)
 			_start_dash(body, _dash_direction)
 
-func handle_move(delta: float, body: CharacterBody2D, previous_velocity: Vector2) -> void:
+func handle_physics_process(delta: float, body: CharacterBody2D, previous_velocity: Vector2) -> void:
 	if _is_dashing:
 		body.velocity = _dash_velocity
 
 ## Returns whether the parent CharacterBody2D can perform Dash movement.
-func _can_dash(body: CharacterBody2D) -> bool:
+func can_do_move(body: CharacterBody2D) -> bool:
 	return (dash_cooldown_duration == 0.0 or _dash_counter > 0) and (body.is_on_floor() or is_air_dash_enabled)
 
 ## Encapsulates logic for initiating Dash movement.

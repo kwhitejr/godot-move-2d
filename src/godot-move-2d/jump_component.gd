@@ -33,7 +33,7 @@ signal char_jump_descend
 signal char_jump_landed
 signal char_jump_air
 
-func ready_move(body: CharacterBody2D):
+func handle_ready(body: CharacterBody2D):
 	add_child(coyote_timer)
 	coyote_timer.one_shot = true
 	coyote_timer.timeout.connect(_on_coyote_timer_timeout)
@@ -41,14 +41,23 @@ func ready_move(body: CharacterBody2D):
 	jump_buffer_timer.one_shot = true
 	jump_buffer_timer.timeout.connect(_on_jump_buffer_timer_timeout)
 
-func detect_move(delta: float, body: CharacterBody2D):
-	if not body.is_on_floor() and not is_jumping:
-		_start_coyote_timer()
-
-func handle_move(delta: float, body: CharacterBody2D, previous_velocity: Vector2):
+func handle_input_event(event : InputEvent, body : CharacterBody2D) -> void:
 	if is_jump_buffer_enabled:
 		_handle_jump_buffer(body)
 	
+	if event.is_action_pressed("jump"):
+		if is_jump_buffer_enabled:
+			_start_jump_buffer_timer()
+		if can_do_move(body):
+			_jump(body)
+		if _can_jump_air(body, is_jumping, air_jumps_current):
+			_jump_air(body)
+
+func handle_process(delta: float, body: CharacterBody2D):
+	if not body.is_on_floor() and not is_jumping:
+		_start_coyote_timer()
+		
+func handle_physics_process(delta: float, body: CharacterBody2D, previous_velocity: Vector2):
 	if _should_jump_apex(body, is_jumping, previous_velocity):
 		_jump_apex()
 		
@@ -57,19 +66,11 @@ func handle_move(delta: float, body: CharacterBody2D, previous_velocity: Vector2
 		
 	if _should_jump_land(body, is_jumping, previous_velocity):
 		_jump_land()
-	
-	if Input.is_action_just_pressed("jump"):
-		if is_jump_buffer_enabled:
-			_start_jump_buffer_timer()
-		if _should_jump(body):
-			_jump(body)
-		if _should_jump_air(body, is_jumping, air_jumps_current):
-			_jump_air(body)
 
 func get_jump_gravity(body : CharacterBody2D) -> float:
 	return jump_ascend_gravity if body.velocity.y < 0.0 else jump_descend_gravity
 
-func _should_jump(body: CharacterBody2D) -> bool:
+func can_do_move(body: CharacterBody2D) -> bool:
 	if is_coyote_time_enabled and not body.is_on_floor():
 		return coyote_timer.get_time_left() > 0
 	return body.is_on_floor()
@@ -80,7 +81,7 @@ func _jump(body: CharacterBody2D) -> void:
 	is_jumping = true
 	char_jump_ascend.emit()
 
-func _should_jump_air(body: CharacterBody2D, is_jumping: bool, remaining_air_jumps: int) -> bool:
+func _can_jump_air(body: CharacterBody2D, is_jumping: bool, remaining_air_jumps: int) -> bool:
 	return remaining_air_jumps > 0 and is_jumping and not body.is_on_floor()
 	
 func _jump_air(body: CharacterBody2D) -> void:
@@ -119,7 +120,7 @@ func _start_jump_buffer_timer() -> void:
 		char_visualize_feature_enable.emit(jump_buffer_feature_color)
 
 func _handle_jump_buffer(body: CharacterBody2D) -> void:
-	if jump_buffer_timer.get_time_left() > 0 and _should_jump(body):
+	if jump_buffer_timer.get_time_left() > 0 and can_do_move(body):
 		jump_buffer_timer.stop()
 		char_visualize_feature_disable.emit()
 		_jump(body)
