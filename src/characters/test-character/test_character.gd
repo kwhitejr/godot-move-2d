@@ -20,19 +20,22 @@ signal char_idle_stand
 signal char_face_direction
 signal char_collect_pickup(pickup : Pickup)
 
+func _input(event : InputEvent) -> void:
+	# Handle event inputs
+	for move_component in move_components:
+		move_component.handle_input_event(event, self)
+
 func _process(delta: float) -> void:
 	for move_component in move_components:
-		move_component.detect_move(delta, self)
+		move_component.handle_process(delta, self)
 
 func _physics_process(delta: float) -> void:
 	previous_velocity = velocity
 	velocity.y += _get_gravity(self) * delta
 	
-	# TODO: possible to trigger moves without looping?
-	# maybe _input
-	# Handle moves
+	# Handle polling inputs
 	for move_component in move_components:
-		move_component.handle_move(delta, self, previous_velocity)
+		move_component.handle_physics_process(delta, self, previous_velocity)
 
 	_handle_direction()
 		
