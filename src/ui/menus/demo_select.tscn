@@ -62,6 +62,7 @@ focus_neighbor_top = NodePath("../ButtonSandboxDemo")
 focus_neighbor_bottom = NodePath("../ButtonBackToMainMenu")
 focus_next = NodePath("../ButtonBackToMainMenu")
 focus_previous = NodePath("../ButtonSandboxDemo")
+disabled = true
 text = "Celeste Clone"
 alignment = 0
 

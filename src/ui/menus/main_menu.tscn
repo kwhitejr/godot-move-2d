@@ -65,36 +65,36 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 10
 
-[node name="ButtonSelectDemo" type="Button" parent="MarginContainer/VBoxContainer/VBoxButtons"]
-layout_mode = 2
-focus_neighbor_top = NodePath("../ButtonQuitGame")
-focus_neighbor_bottom = NodePath("../ButtonStartGame")
-focus_next = NodePath("../ButtonStartGame")
-focus_previous = NodePath("../ButtonQuitGame")
-text = "Select Demo"
-
 [node name="ButtonStartGame" type="Button" parent="MarginContainer/VBoxContainer/VBoxButtons"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-focus_neighbor_top = NodePath("../ButtonSelectDemo")
+focus_neighbor_top = NodePath("../ButtonQuitGame")
+focus_neighbor_bottom = NodePath("../ButtonSelectDemo")
+focus_next = NodePath("../ButtonSelectDemo")
+focus_previous = NodePath("../ButtonQuitGame")
+text = "Start Game"
+
+[node name="ButtonSelectDemo" type="Button" parent="MarginContainer/VBoxContainer/VBoxButtons"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../ButtonStartGame")
 focus_neighbor_bottom = NodePath("../ButtonQuitGame")
 focus_next = NodePath("../ButtonQuitGame")
-focus_previous = NodePath("../ButtonSelectDemo")
-text = "Start Game"
+focus_previous = NodePath("../ButtonStartGame")
+text = "Select Demo"
 
 [node name="ButtonQuitGame" type="Button" parent="MarginContainer/VBoxContainer/VBoxButtons"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-focus_neighbor_top = NodePath("../ButtonStartGame")
-focus_neighbor_bottom = NodePath("../ButtonSelectDemo")
-focus_next = NodePath("../ButtonSelectDemo")
-focus_previous = NodePath("../ButtonStartGame")
+focus_neighbor_top = NodePath("../ButtonSelectDemo")
+focus_neighbor_bottom = NodePath("../ButtonStartGame")
+focus_next = NodePath("../ButtonStartGame")
+focus_previous = NodePath("../ButtonSelectDemo")
 text = "Exit"
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxButtons/ButtonSelectDemo" to="." method="_on_button_select_demo_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxButtons/ButtonStartGame" to="." method="_on_start_game_button_pressed"]
 [connection signal="visibility_changed" from="MarginContainer/VBoxContainer/VBoxButtons/ButtonStartGame" to="." method="_on_visibility_changed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxButtons/ButtonSelectDemo" to="." method="_on_button_select_demo_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxButtons/ButtonQuitGame" to="." method="_on_quit_button_pressed"]

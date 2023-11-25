@@ -38,9 +38,10 @@ func _physics_process(delta: float) -> void:
 		move_component.handle_physics_process(delta, self, previous_velocity)
 
 	_handle_direction()
-		
-	if not Input.is_anything_pressed():
-		char_idle_stand.emit(self)
+
+	var is_idle := not Input.is_anything_pressed() and self.is_on_floor() and is_zero_approx(self.velocity.x)
+	if is_idle:
+		char_idle_stand.emit()
 
 	move_and_slide()
 
