@@ -38,6 +38,8 @@ var is_jumping : bool = false
 var coyote_timer := Timer.new()
 var jump_buffer_timer := Timer.new()
 
+var is_on_floor_vals := []
+
 ## Fired when the character jump ascension begins.
 signal char_jump_ascend
 ## Fired when the character reaches the jump apex.
