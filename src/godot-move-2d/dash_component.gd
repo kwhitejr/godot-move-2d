@@ -56,7 +56,6 @@ func handle_ready(body: CharacterBody2D):
 	dash_cooldown_timer.timeout.connect(_on_dash_cooldown_timer_timout)
 
 func handle_input_event(event : InputEvent, body : CharacterBody2D) -> void:
-#func detect_move(delta: float, body: CharacterBody2D) -> void:
 	if event.is_action_pressed("dash"):
 		var direction_input : Vector2 = Input.get_vector("left", "right", "up", "down")
 		
