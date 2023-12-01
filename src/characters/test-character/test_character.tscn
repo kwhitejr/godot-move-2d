@@ -1,4 +1,4 @@
-[gd_scene load_steps=83 format=3 uid="uid://d0l3aqfc1pokq"]
+[gd_scene load_steps=100 format=3 uid="uid://d0l3aqfc1pokq"]
 
 [ext_resource type="Script" path="res://src/characters/test-character/test_character.gd" id="1_xeg3f"]
 [ext_resource type="Shader" path="res://src/shaders/outline-inline-2d.gdshader" id="2_clqnt"]
@@ -9,12 +9,16 @@
 [ext_resource type="Texture2D" uid="uid://b1pak0qclymcr" path="res://src/addons/art/ZeggyGames/Character/player jump 48x48.png" id="7_6n3jq"]
 [ext_resource type="Texture2D" uid="uid://yg0tgupw88lu" path="res://src/addons/art/ZeggyGames/Character/player land 48x48.png" id="8_8rfdw"]
 [ext_resource type="Texture2D" uid="uid://b2o334b4tg3p0" path="res://src/addons/art/ZeggyGames/Character/PlayerWalk 48x48.png" id="9_5u4i4"]
+[ext_resource type="Texture2D" uid="uid://dxlxmw2dpmfbf" path="res://src/addons/art/ZeggyGames/Character/wall land 48x48.png" id="10_u7vou"]
+[ext_resource type="Texture2D" uid="uid://kwc2f0i30k78" path="res://src/addons/art/ZeggyGames/Character/Player Side-Climb 48x48.png" id="11_11ufd"]
 [ext_resource type="Texture2D" uid="uid://c8fs0m3s51ya8" path="res://src/addons/art/ZeggyGames/Character/player crouch-walk 48x48.png" id="11_n5xdj"]
 [ext_resource type="Script" path="res://src/characters/test-character/test_char_animation.gd" id="11_un7sf"]
 [ext_resource type="Script" path="res://src/godot-move-2d/walk_component.gd" id="12_bjtan"]
+[ext_resource type="Texture2D" uid="uid://b72eat2qvq44a" path="res://src/addons/art/ZeggyGames/Character/Wall Slide 48x48.png" id="13_3yjy8"]
 [ext_resource type="Script" path="res://src/godot-move-2d/crouch_component.gd" id="13_e3lob"]
 [ext_resource type="Script" path="res://src/godot-move-2d/dash_component.gd" id="14_1ptea"]
 [ext_resource type="Script" path="res://src/godot-move-2d/jump_component.gd" id="15_d2478"]
+[ext_resource type="Script" path="res://src/godot-move-2d/wall_movements_component.gd" id="17_ixbac"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_n0ggj"]
 shader = ExtResource("2_clqnt")
@@ -278,6 +282,58 @@ region = Rect2(288, 0, 48, 48)
 atlas = ExtResource("9_5u4i4")
 region = Rect2(336, 0, 48, 48)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_1hg1f"]
+atlas = ExtResource("11_11ufd")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2mgbn"]
+atlas = ExtResource("11_11ufd")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ayenw"]
+atlas = ExtResource("11_11ufd")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oon8o"]
+atlas = ExtResource("11_11ufd")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bv5wd"]
+atlas = ExtResource("10_u7vou")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bn06i"]
+atlas = ExtResource("10_u7vou")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yi1on"]
+atlas = ExtResource("10_u7vou")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1qr61"]
+atlas = ExtResource("10_u7vou")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c1xew"]
+atlas = ExtResource("10_u7vou")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t3x68"]
+atlas = ExtResource("10_u7vou")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5f0dt"]
+atlas = ExtResource("13_3yjy8")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iokjv"]
+atlas = ExtResource("13_3yjy8")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dtlbv"]
+atlas = ExtResource("13_3yjy8")
+region = Rect2(96, 0, 48, 48)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_ei26e"]
 animations = [{
 "frames": [{
@@ -518,6 +574,60 @@ animations = [{
 "loop": true,
 "name": &"walk",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1hg1f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2mgbn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ayenw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oon8o")
+}],
+"loop": true,
+"name": &"wall_climb",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bv5wd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bn06i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yi1on")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1qr61")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c1xew")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t3x68")
+}],
+"loop": false,
+"name": &"wall_land",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5f0dt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iokjv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dtlbv")
+}],
+"loop": false,
+"name": &"wall_slide",
+"speed": 5.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3pwki"]
@@ -533,7 +643,7 @@ script = ExtResource("1_xeg3f")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_n0ggj")
 sprite_frames = SubResource("SpriteFrames_ei26e")
-animation = &"idle_stand"
+animation = &"wall_slide"
 autoplay = "idle_stand"
 script = ExtResource("11_un7sf")
 
@@ -559,6 +669,9 @@ script = ExtResource("14_1ptea")
 [node name="JumpComponent" type="Node" parent="."]
 script = ExtResource("15_d2478")
 
+[node name="WallMovementsComponent" type="Node" parent="."]
+script = ExtResource("17_ixbac")
+
 [connection signal="char_face_direction" from="." to="AnimatedSprite2D" method="_on_test_char_char_face_direction"]
 [connection signal="char_idle_stand" from="." to="AnimatedSprite2D" method="_on_char_idle_stand"]
 [connection signal="char_walk" from="WalkComponent" to="AnimatedSprite2D" method="_on_walk_component_char_walk"]
@@ -573,5 +686,12 @@ script = ExtResource("15_d2478")
 [connection signal="char_jump_ascend" from="JumpComponent" to="AnimatedSprite2D" method="_on_jump_component_char_jump_ascend"]
 [connection signal="char_jump_descend" from="JumpComponent" to="AnimatedSprite2D" method="_on_jump_component_char_jump_descend"]
 [connection signal="char_jump_landed" from="JumpComponent" to="AnimatedSprite2D" method="_on_jump_component_char_jump_landed"]
+[connection signal="char_jump_wall_land" from="JumpComponent" to="AnimatedSprite2D" method="_on_jump_component_char_jump_wall_land"]
 [connection signal="char_visualize_feature_disable" from="JumpComponent" to="AnimatedSprite2D" method="_on_char_visualize_feature_disable"]
 [connection signal="char_visualize_feature_enable" from="JumpComponent" to="AnimatedSprite2D" method="_on_char_visualize_feature_enable"]
+[connection signal="char_visualize_feature_disable" from="WallMovementsComponent" to="AnimatedSprite2D" method="_on_char_visualize_feature_disable"]
+[connection signal="char_visualize_feature_enable" from="WallMovementsComponent" to="AnimatedSprite2D" method="_on_char_visualize_feature_enable"]
+[connection signal="char_wall_climb" from="WallMovementsComponent" to="AnimatedSprite2D" method="_on_wall_movements_component_char_wall_climb"]
+[connection signal="char_wall_cling" from="WallMovementsComponent" to="AnimatedSprite2D" method="_on_wall_movements_component_char_wall_cling"]
+[connection signal="char_wall_cling" from="WallMovementsComponent" to="WallMovementsComponent" method="_on_char_wall_cling"]
+[connection signal="char_wall_slide" from="WallMovementsComponent" to="AnimatedSprite2D" method="_on_wall_movements_component_char_wall_slide"]
