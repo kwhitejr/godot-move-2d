@@ -35,7 +35,13 @@ jobs:
           ls -lah
           cd $PROJECT_PATH
           pwd
+          ls -lah
           godot --headless --verbose --export-release "Web" "$EXPORT_DIR/web/index.html"
+          ls -lah
+          cd ../build
+          ls -lah
+          cd web
+          ls -lah
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
