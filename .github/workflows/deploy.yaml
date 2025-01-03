@@ -32,15 +32,10 @@ jobs:
         run: |
           mkdir -v -p build/web
           EXPORT_DIR="$(readlink -f build)"
-          ls -lah
+          cat "$EXPORT_DIR/web/index.html"
           cd $PROJECT_PATH
-          pwd
-          ls -lah
           godot --headless --verbose --export-release "Web" "$EXPORT_DIR/web/index.html"
-          ls -lah
-          cd ../build
-          ls -lah
-          cd web
+          cd ../build/web
           ls -lah
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
