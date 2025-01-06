@@ -46,6 +46,24 @@ module "acm_request_certificate" {
   zone_id = data.aws_route53_zone.main.zone_id
 }
 
+resource "aws_cloudfront_response_headers_policy" "godot_web" {
+  name    = "godot-policy"
+
+  custom_headers_config {
+    items {
+      header   = "Cross-Origin-Opener-Policy"
+      override = true
+      value    = "same-origin"
+    }
+
+    items {
+      header   = "Cross-Origin-Embedder-Policy"
+      override = true
+      value    = "require-corp"
+    }
+  }
+}
+
 # Reference: https://github.com/cloudposse/terraform-aws-cloudfront-s3-cdn
 module "cdn" {
   source = "cloudposse/cloudfront-s3-cdn/aws"
@@ -73,7 +91,9 @@ module "cdn" {
   index_document              = "index.html"
   error_document              = "index.html"
 
+  response_headers_policy_id = aws_cloudfront_response_headers_policy.godot_web.id
+
   acm_certificate_arn = module.acm_request_certificate.arn
 
-  depends_on = [module.acm_request_certificate]
+  depends_on = [module.acm_request_certificate,aws_cloudfront_response_headers_policy.godot_web]
 }
