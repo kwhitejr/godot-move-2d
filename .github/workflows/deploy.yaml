@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - deploy-pipeline
 
 env:
   GODOT_VERSION: 4.1
@@ -88,35 +87,3 @@ jobs:
       - name: "[Deploy Phase 1] Sync everything from public dir to S3 bucket"
         working-directory: build
         run: aws s3 sync web s3://$BUCKET --delete
-      # 5. HERE BE DRAGONS - update metadata
-      # "aws s3 sync" is a blunt tool.
-      # Your assets will be synced, but missing necessary metadata,
-      # e.g. content-type and content-encoding.
-      # Although it is hacky, the next few commands iterate over certain file types
-      # and re-copy them with the correct metadata.
-      # - name: "[Deploy Phase 2] Brotli-compressed files"
-      #   working-directory: build
-      #   run: |
-      #     aws s3 cp ./WebGL/WebGL s3://$BUCKET \
-      #       --exclude="*" --include="*.br" \
-      #       --content-encoding br \
-      #       --content-type="binary/octet-stream" \
-      #       --metadata-directive REPLACE --recursive;
-
-      # - name: "[Deploy Phase 3] Brotli-compressed Javascript"
-      #   working-directory: build
-      #   run: |
-      #     aws s3 cp ./WebGL/WebGL s3://$BUCKET \
-      #       --exclude="*" --include="*.js.br" \
-      #       --content-encoding br \
-      #       --content-type="application/javascript" \
-      #       --metadata-directive REPLACE --recursive;
-
-      # - name: "[Deploy Phase 4] Brotli-compressed WASM"
-      #   working-directory: build
-      #   run: |
-      #     aws s3 cp ./WebGL/WebGL s3://$BUCKET \
-      #       --exclude="*" --include="*.wasm.br" \
-      #       --content-encoding br \
-      #       --content-type="application/wasm" \
-      #       --metadata-directive REPLACE --recursive;
