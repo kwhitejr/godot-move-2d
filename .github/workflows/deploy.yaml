@@ -1,0 +1,89 @@
+name: Build & Deploy Godot WebGL
+
+# Fire pipeline on merge to main.
+on:
+  push:
+    branches:
+      - main
+
+env:
+  GODOT_VERSION: 4.1
+  EXPORT_NAME: test-project-export
+  PROJECT_PATH: godot
+  BUCKET: godotkwhitejrcom-origin # The bucket created by Terraform.
+
+jobs:
+  export-web:
+    name: Web Export
+    runs-on: ubuntu-20.04
+    container:
+      image: barichello/godot-ci:4.1 # Could not get string interpolation to work :(
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates/
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Web Build
+        run: |
+          mkdir -v -p build/web
+          EXPORT_DIR="$(readlink -f build)"
+          cd $PROJECT_PATH
+          godot --headless --verbose --export-release "Web" "$EXPORT_DIR/web/index.html"
+      - name: Upload static files as GitHub Pages artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+        with:
+          path: build/web
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: web
+          path: build/web
+
+  deploy-github-pages:
+    needs: export-web
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  deploy-aws-s3:
+    needs: export-web
+    runs-on: ubuntu-latest
+    steps:
+      # 2. Download package from build job (the WebGL package).
+      - uses: actions/download-artifact@v4
+        name: Download Artifacts
+        with:
+          name: web
+          path: build/web
+      # 3. Configure AWS credentials. You will need to get these from IAM.
+      - uses: aws-actions/configure-aws-credentials@v4
+        name: Configure AWS credentials from account
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # You can skip role-to-assume if your access keys contain power user credentials.
+          # Best practice is to implement least-based privileges,
+          # where the deploy service user (the pipeline) is limited to just assuming a role
+          # and assumed role has the rights to actually create and update the assets.
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-duration-seconds: 1200
+          role-skip-session-tagging: true
+      # 4. Sync assets to bucket.
+      - name: "[Deploy Phase 1] Sync everything from public dir to S3 bucket"
+        working-directory: build
+        run: aws s3 sync web s3://$BUCKET --delete

@@ -1,2 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
+
+terraform/**/.terraform
+terraform/**/.terraform.lock.hcl
+terraform/**/planfile
+terraform/**/*tfstate*
