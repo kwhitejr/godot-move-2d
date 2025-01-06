@@ -61,7 +61,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
   deploy-aws-s3:
-    needs: build
+    needs: export-web
     runs-on: ubuntu-latest
     steps:
       # 2. Download package from build job (the WebGL package).
