@@ -87,7 +87,9 @@ jobs:
       # 4. Sync assets to bucket.
       - name: "[Deploy Phase 1] Sync everything from public dir to S3 bucket"
         working-directory: build
-        run: aws s3 sync ./WebGL/WebGL s3://$BUCKET --delete
+        run: |
+          ls -lah
+          aws s3 sync ./build/web s3://$BUCKET --delete
       # 5. HERE BE DRAGONS - update metadata
       # "aws s3 sync" is a blunt tool.
       # Your assets will be synced, but missing necessary metadata,
