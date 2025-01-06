@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
           path: build/web
-      - name: Upload Artifact
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: web
@@ -60,20 +60,63 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-    # needs: export-web
-    # name: Deploy to GitHub Pages
-    # runs-on: ubuntu-latest
-    # steps:
-    #   - uses: actions/download-artifact@v4
-    #     name: Download artifacts
-    #     with:
-    #       name: web
-    #       path: build/web
-    #   - name: Install rsync 📚
-    #     run: |
-    #       apt-get update && apt-get install -y rsync
-    #   - name: Deploy to GitHub Pages 🚀
-    #     uses: JamesIves/github-pages-deploy-action@releases/v4
-    #     with:
-    #       branch: gh-pages # The branch the action should deploy to.
-    #       folder: build/web # The folder the action should deploy.
+  deploy-aws-s3:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # 2. Download package from build job (the WebGL package).
+      - uses: actions/download-artifact@v4
+        name: Download Artifacts
+        with:
+          name: web
+          path: build/web
+      # 3. Configure AWS credentials. You will need to get these from IAM.
+      - uses: aws-actions/configure-aws-credentials@v4
+        name: Configure AWS credentials from account
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # You can skip role-to-assume if your access keys contain power user credentials.
+          # Best practice is to implement least-based privileges,
+          # where the deploy service user (the pipeline) is limited to just assuming a role
+          # and assumed role has the rights to actually create and update the assets.
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-duration-seconds: 1200
+          role-skip-session-tagging: true
+      # 4. Sync assets to bucket.
+      - name: "[Deploy Phase 1] Sync everything from public dir to S3 bucket"
+        working-directory: build
+        run: aws s3 sync ./WebGL/WebGL s3://$BUCKET --delete
+      # 5. HERE BE DRAGONS - update metadata
+      # "aws s3 sync" is a blunt tool.
+      # Your assets will be synced, but missing necessary metadata,
+      # e.g. content-type and content-encoding.
+      # Although it is hacky, the next few commands iterate over certain file types
+      # and re-copy them with the correct metadata.
+      # - name: "[Deploy Phase 2] Brotli-compressed files"
+      #   working-directory: build
+      #   run: |
+      #     aws s3 cp ./WebGL/WebGL s3://$BUCKET \
+      #       --exclude="*" --include="*.br" \
+      #       --content-encoding br \
+      #       --content-type="binary/octet-stream" \
+      #       --metadata-directive REPLACE --recursive;
+
+      # - name: "[Deploy Phase 3] Brotli-compressed Javascript"
+      #   working-directory: build
+      #   run: |
+      #     aws s3 cp ./WebGL/WebGL s3://$BUCKET \
+      #       --exclude="*" --include="*.js.br" \
+      #       --content-encoding br \
+      #       --content-type="application/javascript" \
+      #       --metadata-directive REPLACE --recursive;
+
+      # - name: "[Deploy Phase 4] Brotli-compressed WASM"
+      #   working-directory: build
+      #   run: |
+      #     aws s3 cp ./WebGL/WebGL s3://$BUCKET \
+      #       --exclude="*" --include="*.wasm.br" \
+      #       --content-encoding br \
+      #       --content-type="application/wasm" \
+      #       --metadata-directive REPLACE --recursive;
