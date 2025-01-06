@@ -88,8 +88,8 @@ jobs:
       - name: "[Deploy Phase 1] Sync everything from public dir to S3 bucket"
         working-directory: build
         run: |
-          ls -lah
-          aws s3 sync ./build/web s3://$BUCKET --delete
+          ls -lah web
+          aws s3 sync web s3://$BUCKET --delete
       # 5. HERE BE DRAGONS - update metadata
       # "aws s3 sync" is a blunt tool.
       # Your assets will be synced, but missing necessary metadata,
